@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Barcode Scanner</title>
+</head>
+<body>
+  <h2>Machine Barcode Scanner</h2>
+
+  <label for="machine">Select Machine:</label>
+  <select id="machine">
+    <option value="">--Select Machine--</option>
+    <option value="Machine 1">Machine 1</option>
+    <option value="Machine 2">Machine 2</option>
+  </select>
+
+  <br><br>
+
+  <label for="barcode">Scan Barcode:</label>
+  <input type="text" id="barcode" autofocus />
+
+  <br><br>
+  <div id="status"></div>
+
+  <script>
+    document.getElementById("barcode").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        const machine = document.getElementById("machine").value;
+        const barcode = e.target.value.trim();
+
+        if (!machine || !barcode) {
+          alert("Please select a machine and enter a barcode.");
+          return;
+        }
+
+        fetch("/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ machine, barcode })
+        })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("status").textContent = data.message;
+          e.target.value = "";
+        })
+        .catch(err => {
+          document.getElementById("status").textContent = "Error saving data.";
+        });
+      }
+    });
+  </script>
+</body>
+</html>
+
+
+<button id="download-btn">Download scans.csv</button>
+
+<script>
+  // Existing script here...
+
+  document.getElementById('download-btn').addEventListener('click', () => {
+    window.location.href = '/download';
+  });
+</script>

@@ -23,3 +23,12 @@ def submit_data():
         writer.writerow(row)
 
     return jsonify({"message": "Data saved successfully."})
+
+from flask import send_file
+
+@app.route('/download', methods=['GET'])
+def download_csv():
+    csv_path = 'scans.csv'
+    if not os.path.exists(csv_path):
+        return jsonify({"error": "No scan data found."}), 404
+    return send_file(csv_path, mimetype='text/csv', as_attachment=True, download_name='scans.csv')

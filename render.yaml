@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: machine-barcode-app
+    env: python
+    buildCommand: ""
+    startCommand: gunicorn app:app
